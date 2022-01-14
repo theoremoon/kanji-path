@@ -5,7 +5,7 @@ import {readFileSync} from 'fs';
 const delims = '→|(->)|,';
 
 const loadKanji = (): string => {
-  return readFileSync('./data/jis1.txt').toString().trim();
+  return readFileSync('./data/joyo.txt').toString().trim();
 };
 
 const randrange = (min: number, max: number): number => {
