@@ -1,0 +1,23 @@
+# This is a basic workflow to help you get started with Actions
+name: question
+
+on:
+  schedule:
+    - cron: '13 1 * * *' # 毎日 10:13分(JST)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: node index.js question
+        env:
+          USER_TOKEN: ${{ secrets.USER_TOKEN }}
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
