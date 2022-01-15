@@ -98,7 +98,8 @@ test('doAnswer', async () => {
           },
           {
             id: 'YYYYYYYYY',
-            profile: {display_name: 'user2'},
+            real_name: 'user2',
+            profile: {display_name: ''},
           },
           {
             id: 'ZZZZZZZZZ',

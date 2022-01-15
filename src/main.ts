@@ -113,7 +113,7 @@ const getUserMap = async (web: WebClient) => {
   }
   const userMap = new Map<string, string>();
   users.members.forEach((m) => {
-    userMap.set(m.id, m.profile.display_name);
+    userMap.set(m.id, m.profile.display_name || m.real_name);
   });
   return userMap;
 };
@@ -127,6 +127,15 @@ export const doQuestion = async (web: WebClient, channelID: string) => {
     channel: channelID,
     text: `今日の問題： [${kanji[i]}]から[${kanji[j]}]まで繋げて下さい`,
   });
+};
+
+const getAnswer = (s: string, e: string) => {
+  const idioms = loadIdioms();
+  const ans = solve(idioms, s, e);
+  if (ans === null) {
+    return '答えなし';
+  }
+  return formatAnswer(ans);
 };
 
 export const doAnswer = async (web: WebClient, channelID: string) => {
@@ -153,21 +162,23 @@ export const doAnswer = async (web: WebClient, channelID: string) => {
 
   const msgs = [];
   attempts.forEach((a, i) => {
-    let s = '  ';
+    let s = '';
     if (i === 0) {
       s += ':crown:';
     }
     if (i === firstBloodIndex) {
       s += ':zap:';
     }
-    s += userMap.get(a.msg.user);
-    s += ' ' + a.matches.join(' → ');
+    s += userMap.get(a.msg.user) + ': ';
+    s += a.matches.join(' → ');
     msgs.push(s);
   });
 
+  const botAns = getAnswer(question.start, question.end);
+
   await web.chat.postMessage({
     channel: channelID,
-    text: ':stopwatch: 回答を締め切ります。本日の結果\n' + msgs.join('\n'),
+    text: ':stopwatch: 回答を締め切ります。本日の結果\n' + msgs.join('\n') + '\nbotの回答:' + botAns,
   });
 };
 
