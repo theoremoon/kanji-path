@@ -3,7 +3,7 @@ name: answer
 
 on:
   schedule:
-    - cron: '43 8 * * *' # 毎日 17:43分(JST)
+    - cron: '43 10 * * *' # 毎日 19:43分(JST)
   workflow_dispatch:
 
 jobs:
