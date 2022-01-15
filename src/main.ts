@@ -1,6 +1,7 @@
 import {WebClient} from '@slack/web-api';
 import {Message} from '@slack/web-api/dist/response/ConversationsHistoryResponse';
 import {readFileSync} from 'fs';
+import {solve, loadIdioms, formatAnswer} from './solve';
 
 const delims = '→|(->)|,';
 
@@ -171,22 +172,39 @@ export const doAnswer = async (web: WebClient, channelID: string) => {
 };
 
 const main = async () => {
+  const usage = 'usage: USER_TOKEN=... CHANNEL_ID=... node index.js <question|answer|solve>';
   if (process.argv.length <= 2) {
-    console.log('usage: USER_TOKEN=... CHANNEL_ID=... node index.js <question|answer>');
+    console.log(usage);
+    process.exit(1);
   }
 
-  const token = process.env.USER_TOKEN;
-  const channelID = process.env.CHANNEL_ID;
-
-  const web = new WebClient(token);
-
-  console.log(process.argv);
   if (process.argv[2] === 'question') {
+    const token = process.env.USER_TOKEN;
+    const channelID = process.env.CHANNEL_ID;
+    const web = new WebClient(token);
+
     await doQuestion(web, channelID);
   } else if (process.argv[2] === 'answer') {
+    const token = process.env.USER_TOKEN;
+    const channelID = process.env.CHANNEL_ID;
+    const web = new WebClient(token);
+
     await doAnswer(web, channelID);
+  } else if (process.argv[2] === 'solve') {
+    if (process.argv.length <= 4) {
+      console.log('usage: node index.js solve <天> <餅>');
+      process.exit(1);
+    }
+    const idioms = loadIdioms();
+    const ans = solve(idioms, process.argv[3], process.argv[4]);
+    if (!ans) {
+      console.log('no answer');
+      process.exit(0);
+    }
+    console.log(formatAnswer(ans));
   } else {
-    console.log('usage: USER_TOKEN=... CHANNEL_ID=... node index.js <question|answer>');
+    console.log(usage);
+    process.exit(1);
   }
 };
 

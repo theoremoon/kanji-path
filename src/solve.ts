@@ -48,3 +48,11 @@ export const solve = (idioms: Graph, s: string, e: string): string[]|null => {
   }
   return null;
 };
+
+export const formatAnswer = (chars :string[]) => {
+  const xs = [];
+  for (let i = 0; i < chars.length - 1; i++) {
+    xs.push(chars[i] + chars[i+1]);
+  }
+  return xs.join('→');
+};
