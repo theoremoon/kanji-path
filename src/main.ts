@@ -16,7 +16,7 @@ const randrange = (min: number, max: number): number => {
 };
 
 const getTodaysHistory = async (web: WebClient, channelID: string) => {
-  const ts = Math.floor(Date.now().valueOf() / 1000) - 60*60*12; // 12時間前のunixtime
+  const ts = Math.floor(Date.now().valueOf() / 1000) - 60*60*20; // 20時間前のunixtime
 
   return await web.conversations.history({
     channel: channelID,
