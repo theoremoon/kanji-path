@@ -123,6 +123,9 @@ export const doQuestion = async (web: WebClient, channelID: string) => {
   const i = randrange(0, kanji.length);
   const j = randrange(0, kanji.length);
 
+  console.log(kanji[i]);
+  console.log(kanji[j]);
+
   await web.chat.postMessage({
     channel: channelID,
     text: `今日の問題： [${kanji[i]}]から[${kanji[j]}]まで繋げて下さい`,
